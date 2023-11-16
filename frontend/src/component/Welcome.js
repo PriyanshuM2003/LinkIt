@@ -57,7 +57,7 @@ const Welcome = (props) => {
                 fontSize: "18px",
                 textTransform: "uppercase",
                 fontWeight: "800",
-                color: "#3f51b5",
+                color: "#401d1d",
                 letterSpacing: "0.5px",
               }}
             >
@@ -72,7 +72,7 @@ const Welcome = (props) => {
                 marginBottom: "25px",
                 textTransform: "uppercase",
                 fontWeight: "800",
-                color: "#3f51b5",
+                color: "#401d1d",
                 letterSpacing: "1px",
               }}
             >

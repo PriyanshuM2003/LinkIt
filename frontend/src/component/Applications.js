@@ -259,7 +259,7 @@ const Applications = (props) => {
       style={{ padding: "30px", minHeight: "93vh" }}
     >
       <Grid item>
-        <Typography variant="h2" style={{ color: "white", fontWeight: "bold" }}>
+        <Typography variant="h2" style={{ color: "#401d1d", fontWeight: "bold" }}>
           Applications
         </Typography>
       </Grid>

@@ -35,7 +35,7 @@ const Navbar = (props) => {
     <AppBar
       position="fixed"
       background="transparent"
-      style={{ backgroundColor: "rgb(110,0,190)" }}
+      style={{ backgroundColor: "#401d1d" }}
     >
       <Toolbar style={{ minHeight: "80px" }}>
         <Typography

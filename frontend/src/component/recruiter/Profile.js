@@ -138,7 +138,7 @@ const Profile = (props) => {
           >
             <Grid container direction="column" alignItems="stretch" spacing={3}>
             <Grid item >
-              <Typography variant="h3" component="h2" style={{color:"#3f51b5",fontWeight:"bold"}}>
+              <Typography variant="h3" component="h2" style={{color:"#401d1d",fontWeight:"bold"}}>
                 Profile
               </Typography>
             </Grid>

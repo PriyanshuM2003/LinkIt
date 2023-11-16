@@ -106,7 +106,7 @@ const Login = (props) => {
   };
 
   return loggedin ? (
-    <Redirect to="/" />
+    <Redirect to="/home" />
   ) : (
     <Grid container direction="row">
       <div style={{ alignItems: "center", marginLeft: "15%", marginTop: "" }}>

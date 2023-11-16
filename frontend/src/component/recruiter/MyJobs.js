@@ -802,7 +802,7 @@ const MyJobs = (props) => {
           alignItems="center"
         >
           <Grid item xs>
-            <Typography variant="h2" style={{color:"white",fontWeight:"bold"}}>My Jobs</Typography>
+            <Typography variant="h2" style={{color:"#401d1d",fontWeight:"bold"}}>My Jobs</Typography>
           </Grid>
           <Grid item xs>
             <TextField

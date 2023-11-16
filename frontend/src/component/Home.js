@@ -28,6 +28,7 @@ import { SetPopupContext } from "../App";
 
 import apiList from "../lib/apiList";
 import { userType } from "../lib/isAuth";
+import logoImg from "./logo2.png";
 
 const useStyles = makeStyles((theme) => ({
   body: {
@@ -644,7 +645,8 @@ const Home = (props) => {
               variant="h2"
               style={{ color: "white", fontWeight: "bold" }}
             >
-              Jobs
+              {/* Jobs */}
+              <img src={logoImg} width="170px" height="auto"></img>
             </Typography>
           </Grid>
           <Grid item xs>
