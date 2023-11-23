@@ -292,7 +292,7 @@ const Profile = (props) => {
               <Typography
                 variant="h3"
                 component="h2"
-                style={{ color: "#3f51b5", fontWeight: "bold" }}
+                style={{ color: "#401d1d", fontWeight: "bold" }}
               >
                 Profile
               </Typography>
@@ -380,6 +380,8 @@ const Profile = (props) => {
                 marginTop: "30px",
                 borderRadius: "8px",
                 height: "50px",
+                background: "#401d1d",
+                color: "white",
               }}
               onClick={() => handleUpdate()}
             >

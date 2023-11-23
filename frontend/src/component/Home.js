@@ -521,8 +521,11 @@ const FilterPopup = (props) => {
           <Grid item>
             <Button
               variant="contained"
-              color="primary"
-              style={{ padding: "10px 50px" }}
+              style={{
+                padding: "10px 50px",
+                background: "#401d1d",
+                color: "white",
+              }}
               onClick={() => getData()}
             >
               Apply

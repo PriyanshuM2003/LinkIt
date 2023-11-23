@@ -4,6 +4,7 @@ import {
   Typography,
   Button,
   makeStyles,
+  Link,
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
@@ -43,7 +44,9 @@ const Navbar = (props) => {
           className={classes.title}
           style={{ fontSize: "32px", fontWeight: "800" }}
         >
-          <img src={logoImg} width="170px" height="auto"></img>LinkIt
+          <Link href="/" underline="none" color="inherit">
+            <img src={logoImg} width="170px" height="auto"></img>LinkIt
+          </Link>
         </Typography>
         <div style={{ marginTop: "20px" }}>
           {isAuth() ? (

@@ -118,7 +118,7 @@ const Login = (props) => {
             <Typography
               variant="h3"
               component="h2"
-              style={{ color: "#3f51b5", fontWeight: "bold" }}
+              style={{ color: "#401d1d", fontWeight: "bold" }}
             >
               Welcome back, Login!
             </Typography>
@@ -148,7 +148,13 @@ const Login = (props) => {
               color="primary"
               onClick={() => handleLogin()}
               className={classes.submitButton}
-              style={{ borderRadius: "8px", width: "130px", height: "50px" }}
+              style={{
+                borderRadius: "8px",
+                width: "130px",
+                height: "50px",
+                background: "#401d1d",
+                color: "white",
+              }}
             >
               Login
             </Button>
