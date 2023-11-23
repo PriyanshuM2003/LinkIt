@@ -251,6 +251,26 @@ const FilterPopup = (props) => {
                 <FormControlLabel
                   control={
                     <Checkbox
+                      name="internship"
+                      checked={searchOptions.jobType.internship}
+                      onChange={(event) => {
+                        setSearchOptions({
+                          ...searchOptions,
+                          jobType: {
+                            ...searchOptions.jobType,
+                            [event.target.name]: event.target.checked,
+                          },
+                        });
+                      }}
+                    />
+                  }
+                  label="Internship"
+                />
+              </Grid>
+              <Grid item>
+                <FormControlLabel
+                  control={
+                    <Checkbox
                       name="wfh"
                       checked={searchOptions.jobType.wfh}
                       onChange={(event) => {
@@ -522,6 +542,7 @@ const Home = (props) => {
     jobType: {
       fullTime: false,
       partTime: false,
+      internship: false,
       wfh: false,
     },
     salary: [0, 100],
@@ -557,6 +578,9 @@ const Home = (props) => {
     }
     if (searchOptions.jobType.partTime) {
       searchParams = [...searchParams, `jobType=Part%20Time`];
+    }
+    if (searchOptions.jobType.internship) {
+      searchParams = [...searchParams, `jobType=Internship`];
     }
     if (searchOptions.jobType.wfh) {
       searchParams = [...searchParams, `jobType=Work%20From%20Home`];

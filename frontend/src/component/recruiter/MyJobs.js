@@ -417,6 +417,26 @@ const FilterPopup = (props) => {
                 <FormControlLabel
                   control={
                     <Checkbox
+                      name="internship"
+                      checked={searchOptions.jobType.internship}
+                      onChange={(event) => {
+                        setSearchOptions({
+                          ...searchOptions,
+                          jobType: {
+                            ...searchOptions.jobType,
+                            [event.target.name]: event.target.checked,
+                          },
+                        });
+                      }}
+                    />
+                  }
+                  label="Internship"
+                />
+              </Grid>
+              <Grid item>
+                <FormControlLabel
+                  control={
+                    <Checkbox
                       name="wfh"
                       checked={searchOptions.jobType.wfh}
                       onChange={(event) => {
@@ -688,6 +708,7 @@ const MyJobs = (props) => {
     jobType: {
       fullTime: false,
       partTime: false,
+      internship: false,
       wfh: false,
     },
     salary: [0, 100],
@@ -723,6 +744,9 @@ const MyJobs = (props) => {
     }
     if (searchOptions.jobType.partTime) {
       searchParams = [...searchParams, `jobType=Part%20Time`];
+    }
+    if (searchOptions.jobType.internship) {
+      searchParams = [...searchParams, `jobType=Internship`];
     }
     if (searchOptions.jobType.wfh) {
       searchParams = [...searchParams, `jobType=Work%20From%20Home`];
@@ -802,7 +826,12 @@ const MyJobs = (props) => {
           alignItems="center"
         >
           <Grid item xs>
-            <Typography variant="h2" style={{color:"#401d1d",fontWeight:"bold"}}>My Jobs</Typography>
+            <Typography
+              variant="h2"
+              style={{ color: "#401d1d", fontWeight: "bold" }}
+            >
+              My Jobs
+            </Typography>
           </Grid>
           <Grid item xs>
             <TextField
@@ -828,7 +857,11 @@ const MyJobs = (props) => {
                   </InputAdornment>
                 ),
               }}
-              style={{ width: "500px",backgroundColor:"white", borderRadius:"12px"}}
+              style={{
+                width: "500px",
+                backgroundColor: "white",
+                borderRadius: "12px",
+              }}
               variant="outlined"
             />
           </Grid>
@@ -852,8 +885,17 @@ const MyJobs = (props) => {
               return <JobTile job={job} getData={getData} />;
             })
           ) : (
-            <Typography variant="h5" style={{height:"50px", textAlign: "center",
-            background:"rgba(255,255,255,0.5)",marginLeft:"25%",marginRight:"25%",paddingTop:"15px" }}>
+            <Typography
+              variant="h5"
+              style={{
+                height: "50px",
+                textAlign: "center",
+                background: "rgba(255,255,255,0.5)",
+                marginLeft: "25%",
+                marginRight: "25%",
+                paddingTop: "15px",
+              }}
+            >
               No jobs found
             </Typography>
           )}
