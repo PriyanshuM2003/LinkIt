@@ -42,12 +42,14 @@ const Verify = () => {
   }, [token, history]);
 
   return (
-    <div>
-      <h1>{verificationStatus}</h1>
-      {verificationStatus === "Email verified successfully" && (
-        <p>Redirecting to login page in {redirectTimer} seconds...</p>
-      )}
-    </div>
+    <>
+      <div>
+        <h1>{verificationStatus}</h1>
+        {verificationStatus === "Email verified successfully" && (
+          <p>Redirecting to login page in {redirectTimer} seconds...</p>
+        )}
+      </div>
+    </>
   );
 };
 
