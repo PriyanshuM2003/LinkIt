@@ -67,37 +67,74 @@ router.post("/signup", async (req, res) => {
     const verificationLink = `${process.env.HOST}/verify/${verificationToken}`;
     const emailContent = `<!DOCTYPE html>
     <html lang="en">
+    
     <head>
-      <meta charset="UTF-8">
-      <title>Email Verification</title>
+        <meta charset="UTF-8">
+        <title>Welcome to LinkIt</title>
+        <style>
+            body {
+                font-family: 'Arial', sans-serif;
+                background-color: #f4f4f4;
+                margin: 0;
+                padding: 0;
+                line-height: 1.6;
+                color: #333;
+            }
+    
+            .container {
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+    
+            h1 {
+                color: #401d1d;
+            }
+    
+            .welcome-text {
+                margin-bottom: 20px;
+            }
+    
+            .cta-button {
+                display: inline-block;
+                margin-top: 20px;
+                padding: 12px 24px;
+                font-size: 16px;
+                font-weight: bold;
+                text-align: center;
+                text-decoration: none;
+                color: #fff;
+                background-color: #401d1d;
+                border-radius: 5px;
+            }
+    
+            .cta-button:hover {
+                background-color: #5e2b2b;
+            }
+    
+            .note {
+                margin-top: 30px;
+                font-size: 14px;
+                color: #777;
+            }
+        </style>
     </head>
-    <body style="font-family: Arial, sans-serif; margin: 0; padding: 0;">
     
-      <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr>
-          <td align="center" style="padding: 40px 0;">
-            <h1>Email Verification</h1>
-            <p>Hello,</p>
-            <p>Please click the button below to verify your email address.</p>
-            <table role="presentation" border="0" cellspacing="0" cellpadding="0">
-              <tr>
-                <td align="center">
-                  <table role="presentation" border="0" cellspacing="0" cellpadding="0">
-                    <tr>
-                      <td>
-                        <a href="${verificationLink}" target="_blank" style="background-color: #401d1d; color: #ffffff; display: inline-block; font-size: 16px; text-decoration: none; padding: 12px 24px; border-radius: 5px;">Verify Email</a>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-            <p>If you didn't create an account with us, you can ignore this message.</p>
-          </td>
-        </tr>
-      </table>
-    
+    <body>
+        <div class="container">
+            <h1>Welcome to LinkIt!</h1>
+            <p class="welcome-text">Dear ${data.name},</p>
+            <p>Thank you for signing up with us. We're thrilled to have you on board.</p>
+            <p>We are dedicated to providing you with a great experience.</p>
+            <p>Please click the button below to get started:</p>
+            <a href="${verificationLink}" class="cta-button">Get Started</a>
+            <p class="note">If you didn't create an account with us, you can ignore this message.</p>
+        </div>
     </body>
+    
     </html>
     `;
 

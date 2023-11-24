@@ -29,7 +29,7 @@ const Welcome = (props) => {
         <source src={video} type="video/mp4" />
       </video>
       <div
-        class="caption header-text"
+        className="caption header-text"
         style={{
           position: "absolute",
           top: "0",

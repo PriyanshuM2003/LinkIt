@@ -1,5 +1,4 @@
-export const server = "http://localhost:5000";
-//export const server = "https://secret-shelf-87665.herokuapp.com";
+export const server = process.env.REACT_APP_SERVER;
 
 const apiList = {
   login: `${server}/auth/login`,
