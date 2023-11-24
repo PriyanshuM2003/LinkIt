@@ -19,9 +19,15 @@ let schema = new mongoose.Schema(
       enum: ["recruiter", "applicant"],
       required: true,
     },
-    
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+    },
   },
-  { collation: { locale: "en" } }
+  { collation: { locale: "en" }, timestamps: true }
 );
 
 // Password hashing

@@ -27,9 +27,9 @@ let schema = new mongoose.Schema(
       },
     },
   },
-  //Collation allows users to specify language-specific rules for string comparison, 
+  //Collation allows users to specify language-specific rules for string comparison,
   //such as rules for lettercase and accent marks.
-  { collation: { locale: "en" } }
+  { collation: { locale: "en" }, timestamps: true }
 );
 
 schema.index({ category: 1, receiverId: 1, senderId: 1 }, { unique: true });

@@ -23,7 +23,7 @@ let schema = new mongoose.Schema(
       type: String,
     },
   },
-  { collation: { locale: "en" } }
+  { collation: { locale: "en" }, timestamps: true }
 );
 
 module.exports = mongoose.model("RecruiterInfo", schema);

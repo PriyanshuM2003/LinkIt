@@ -17,9 +17,9 @@ import AcceptedApplicants from "./component/recruiter/AcceptedApplicants";
 import RecruiterProfile from "./component/recruiter/Profile";
 import MessagePopup from "./lib/MessagePopup";
 import isAuth, { userType } from "./lib/isAuth";
+import Verify from "./component/verify";
 
-const useStyles = makeStyles(
-  (theme) => ({
+const useStyles = makeStyles((theme) => ({
   body: {
     display: "flex",
     flexDirection: "column",
@@ -33,7 +33,7 @@ const useStyles = makeStyles(
 }));
 
 export const SetPopupContext = createContext();
-const TITLE ="LinkIt"
+const TITLE = "LinkIt";
 
 function App() {
   const classes = useStyles();
@@ -45,9 +45,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      
       <SetPopupContext.Provider value={setPopup}>
-      
         <Grid container direction="column">
           <Grid item xs>
             <Navbar />
@@ -56,6 +54,9 @@ function App() {
             <Switch>
               <Route exact path="/">
                 <Welcome />
+              </Route>
+              <Route path="/verify/:token">
+                <Verify />
               </Route>
               <Route exact path="/login">
                 <Login />
@@ -72,7 +73,7 @@ function App() {
               <Route exact path="/applications">
                 <Applications />
               </Route>
-             
+
               <Route exact path="/profile">
                 {userType() === "recruiter" ? (
                   <RecruiterProfile />

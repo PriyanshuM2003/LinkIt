@@ -129,7 +129,7 @@ let schema = new mongoose.Schema(
       },
     },
   },
-  { collation: { locale: "en" } }
+  { collation: { locale: "en" }, timestamps: true }
 );
 
 module.exports = mongoose.model("jobs", schema);
