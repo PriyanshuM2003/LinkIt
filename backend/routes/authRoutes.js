@@ -156,6 +156,15 @@ router.post("/login", (req, res, next) => {
         res.status(401).json(info);
         return;
       }
+
+      if (!user.isVerified) {
+        res.status(401).json({
+          message:
+            "Please verify yourself by the verification email sent to you.",
+        });
+        return;
+      }
+
       // Token
       const token = jwt.sign({ _id: user._id }, authKeys.jwtSecretKey);
       res.json({

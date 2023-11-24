@@ -71,9 +71,9 @@ const Login = (props) => {
   };
 
   const handleLogin = () => {
-    const verified = !Object.keys(inputErrorHandler).some((obj) => {
-      return inputErrorHandler[obj].error;
-    });
+    const verified = !Object.keys(inputErrorHandler).some(
+      (obj) => inputErrorHandler[obj].error
+    );
     if (verified) {
       axios
         .post(apiList.login, loginDetails)
@@ -89,11 +89,20 @@ const Login = (props) => {
           console.log(response);
         })
         .catch((err) => {
-          setPopup({
-            open: true,
-            severity: "error",
-            message: err.response.data.message,
-          });
+          if (err.response && err.response.status === 401) {
+            setPopup({
+              open: true,
+              severity: "error",
+              message:
+                "Please verify yourself by the verification email sent to you.",
+            });
+          } else {
+            setPopup({
+              open: true,
+              severity: "error",
+              message: err.response?.data?.message || "Login failed",
+            });
+          }
           console.log(err.response);
         });
     } else {
