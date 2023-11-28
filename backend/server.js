@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const passportConfig = require("./lib/passportConfig");
-var cors = require("cors");
+const cors = require("cors");
 const fs = require("fs");
 
 require("dotenv").config();
@@ -12,31 +12,29 @@ const corsOptions = {
 };
 
 const db = require("./config/keys").mongoURI;
-mongoose
-  .connect(db, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log(err));
 
-// initialising directories
-if (!fs.existsSync("./public")) {
-  fs.mkdirSync("./public");
-}
-if (!fs.existsSync("./public/resume")) {
-  fs.mkdirSync("./public/resume");
-}
-if (!fs.existsSync("./public/profile")) {
-  fs.mkdirSync("./public/profile");
-}
+// Updated MongoDB connection options
+mongoose
+  .connect(db)
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.error("MongoDB Connection Error:", err));
+
+// Initialize directories
+const createDirectoryIfNotExists = (directory) => {
+  if (!fs.existsSync(directory)) {
+    fs.mkdirSync(directory);
+  }
+};
+
+createDirectoryIfNotExists("./public");
+createDirectoryIfNotExists("./public/resume");
+createDirectoryIfNotExists("./public/profile");
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(passportConfig.initialize());
