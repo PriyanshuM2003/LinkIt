@@ -16,7 +16,7 @@ import {
   MenuItem,
   Checkbox,
 } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Rating from "@material-ui/lab/Rating";
 import Pagination from "@material-ui/lab/Pagination";
 import axios from "axios";
@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
 
 const JobTile = (props) => {
   const classes = useStyles();
-  let history = useHistory();
+  const navigate = useNavigate();
   const { job, getData } = props;
   const setPopup = useContext(SetPopupContext);
 
@@ -79,7 +79,7 @@ const JobTile = (props) => {
   };
 
   const handleClick = (location) => {
-    history.push(location);
+    navigate(location);
   };
 
   const handleClose = () => {

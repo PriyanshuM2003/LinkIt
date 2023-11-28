@@ -6,7 +6,7 @@ import {
   makeStyles,
   Link,
 } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import isAuth, { userType } from "../lib/isAuth";
 import logoImg from "./logo2.png";
@@ -25,11 +25,11 @@ const useStyles = makeStyles((theme) => ({
 
 const Navbar = (props) => {
   const classes = useStyles();
-  let history = useHistory();
+  const navigate = useNavigate();
 
   const handleClick = (location) => {
     console.log(location);
-    history.push(location);
+    navigate(location);
   };
 
   return (

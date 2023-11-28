@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import apiList from "../lib/apiList";
 
 const Verify = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { token } = useParams();
   const [verificationStatus, setVerificationStatus] = useState("");
   const [redirectTimer, setRedirectTimer] = useState(3);
@@ -27,7 +27,7 @@ const Verify = () => {
 
           setTimeout(() => {
             clearInterval(timer);
-            history.push("/login");
+            navigate("/login");
           }, 3000);
         } else {
           setVerificationStatus("Email verification failed");
@@ -39,7 +39,7 @@ const Verify = () => {
     };
 
     verifyToken();
-  }, [token, history]);
+  }, [token, navigate]);
 
   return (
     <>

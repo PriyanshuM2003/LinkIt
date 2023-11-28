@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Grid, makeStyles } from "@material-ui/core";
 
 import Welcome, { ErrorPage } from "./component/Welcome";
@@ -44,35 +44,23 @@ function App() {
   });
 
   return (
-    <BrowserRouter>
+    <Router>
       <SetPopupContext.Provider value={setPopup}>
         <Grid container direction="column">
           <Grid item xs>
             <Navbar />
           </Grid>
           <Grid item className={classes.body}>
-            <Switch>
+            <Routes>
               <Route exact path="/">
                 <Welcome />
               </Route>
-              <Route path="/verify/:token">
-                <Verify />
-              </Route>
-              <Route exact path="/login">
-                <Login />
-              </Route>
-              <Route exact path="/signup">
-                <Signup />
-              </Route>
-              <Route exact path="/logout">
-                <Logout />
-              </Route>
-              <Route exact path="/home">
-                <Home />
-              </Route>
-              <Route exact path="/applications">
-                <Applications />
-              </Route>
+              <Route exact path="/verify/:token" element={<Verify />} />
+              <Route exact path="/login" element={<Login />} />
+              <Route exact path="/signup" element={<Signup />} />
+              <Route exact path="/logout" element={<Logout />} />
+              <Route exact path="/home" element={<Home />} />
+              <Route exact path="/applications" element={<Applications />} />
 
               <Route exact path="/profile">
                 {userType() === "recruiter" ? (
@@ -81,22 +69,16 @@ function App() {
                   <Profile />
                 )}
               </Route>
-              <Route exact path="/addjob">
-                <CreateJobs />
-              </Route>
-              <Route exact path="/myjobs">
-                <MyJobs />
-              </Route>
-              <Route exact path="/job/applications/:jobId">
-                <JobApplications />
-              </Route>
-              <Route exact path="/employees">
-                <AcceptedApplicants />
-              </Route>
-              <Route>
-                <ErrorPage />
-              </Route>
-            </Switch>
+              <Route exact path="/addjob" element={<CreateJobs />} />
+              <Route exact path="/myjobs" element={<MyJobs />} />
+              <Route
+                exact
+                path="/job/applications/:jobId"
+                element={<JobApplications />}
+              />
+              <Route exact path="/employees" element={<AcceptedApplicants />} />
+              <Route element={<ErrorPage />} />
+            </Routes>
           </Grid>
         </Grid>
         <MessagePopup
@@ -111,7 +93,7 @@ function App() {
           message={popup.message}
         />
       </SetPopupContext.Provider>
-    </BrowserRouter>
+    </Router>
   );
 }
 
