@@ -52,9 +52,7 @@ function App() {
           </Grid>
           <Grid item className={classes.body}>
             <Routes>
-              <Route exact path="/">
-                <Welcome />
-              </Route>
+              <Route exact path="/" element={<Welcome />} />
               <Route exact path="/verify/:token" element={<Verify />} />
               <Route exact path="/login" element={<Login />} />
               <Route exact path="/signup" element={<Signup />} />
@@ -62,13 +60,17 @@ function App() {
               <Route exact path="/home" element={<Home />} />
               <Route exact path="/applications" element={<Applications />} />
 
-              <Route exact path="/profile">
-                {userType() === "recruiter" ? (
-                  <RecruiterProfile />
-                ) : (
-                  <Profile />
-                )}
-              </Route>
+              <Route
+                exact
+                path="/profile"
+                element={
+                  userType() === "recruiter" ? (
+                    <RecruiterProfile />
+                  ) : (
+                    <Profile />
+                  )
+                }
+              />
               <Route exact path="/addjob" element={<CreateJobs />} />
               <Route exact path="/myjobs" element={<MyJobs />} />
               <Route

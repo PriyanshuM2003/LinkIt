@@ -8,7 +8,7 @@ import {
   Paper,
 } from "@material-ui/core";
 import axios from "axios";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import "../index.css";
 
 import PasswordInput from "../lib/PasswordInput";
@@ -115,7 +115,7 @@ const Login = (props) => {
   };
 
   return loggedin ? (
-    <Redirect to="/home" />
+    <Navigate replace to="/home" />
   ) : (
     <Grid container direction="row">
       <div style={{ alignItems: "center", marginLeft: "15%", marginTop: "" }}>
