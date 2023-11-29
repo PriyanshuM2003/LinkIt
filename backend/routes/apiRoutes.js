@@ -8,8 +8,8 @@ const Recruiter = require("../db/Recruiter");
 const Job = require("../db/Job");
 const Application = require("../db/Application");
 const Rating = require("../db/Rating");
-
-//The express.Router() function is used to create a new router object. 
+const { sendEmail } = require("../lib/mailer");
+//The express.Router() function is used to create a new router object.
 //This function is used when you want to create a new router object in your program to handle requests.
 const router = express.Router();
 
@@ -18,8 +18,8 @@ router.post("/jobs", jwtAuth, (req, res) => {
   const user = req.user;
 
   if (user.type != "recruiter") {
-    // applicant trying to add new job 
-    // not authorised 
+    // applicant trying to add new job
+    // not authorised
     res.status(401).json({
       message: "You don't have permissions to add jobs",
     });
@@ -48,12 +48,11 @@ router.post("/jobs", jwtAuth, (req, res) => {
       res.json({ message: "Job added successfully to the database" });
     })
     .catch((err) => {
-      //Whenever any user sends an invalid request to the server, 
+      //Whenever any user sends an invalid request to the server,
       //the server immediately reports it and generates an HTTP based 400 bad request error.
       res.status(400).json(err);
     });
 });
-
 
 // to get all the jobs [pagination] [for recruiter personal and for everyone]
 router.get("/jobs", jwtAuth, (req, res) => {
@@ -61,7 +60,6 @@ router.get("/jobs", jwtAuth, (req, res) => {
 
   let findParams = {};
   let sortParams = {};
-
 
   // to list down jobs posted by a particular recruiter
   if (user.type === "recruiter" && req.query.myjobs) {
@@ -476,7 +474,6 @@ router.put("/user", jwtAuth, (req, res) => {
   }
 });
 
-
 // apply for a job [todo: test: done]
 router.post("/jobs/:id/applications", jwtAuth, (req, res) => {
   const user = req.user;
@@ -691,194 +688,613 @@ router.get("/applications", jwtAuth, (req, res) => {
 });
 
 // update status of application: [Applicant: Can cancel, Recruiter: Can do everything] [todo: test: done]
-router.put("/applications/:id", jwtAuth, (req, res) => {
+// router.put("/applications/:id", jwtAuth, (req, res) => {
+//   const user = req.user;
+//   const id = req.params.id;
+//   const status = req.body.status;
+
+//   // "applied", // when a applicant is applied
+//   // "shortlisted", // when a applicant is shortlisted
+//   // "accepted", // when a applicant is accepted
+//   // "rejected", // when a applicant is rejected
+//   // "deleted", // when any job is deleted
+//   // "cancelled", // an application is cancelled by its author or when other application is accepted
+//   // "finished", // when job is over
+
+//   if (user.type === "recruiter") {
+//     if (status === "accepted") {
+//       // get job id from application
+//       // get job info for maxPositions count
+//       // count applications that are already accepted
+//       // compare and if condition is satisfied, then save
+
+//       Application.findOne({
+//         _id: id,
+//         recruiterId: user._id,
+//       })
+//         .then((application) => {
+//           if (application === null) {
+//             res.status(404).json({
+//               message: "Application not found",
+//             });
+//             return;
+//           }
+
+//           Job.findOne({
+//             _id: application.jobId,
+//             userId: user._id,
+//           }).then((job) => {
+//             if (job === null) {
+//               res.status(404).json({
+//                 message: "Job does not exist",
+//               });
+//               return;
+//             }
+
+//             Application.countDocuments({
+//               recruiterId: user._id,
+//               jobId: job._id,
+//               status: "accepted",
+//             }).then((activeApplicationCount) => {
+//               if (activeApplicationCount < job.maxPositions) {
+//                 // accepted
+//                 application.status = status;
+//                 application.dateOfJoining = req.body.dateOfJoining;
+//                 application
+//                   .save()
+//                   .then(() => {
+//                     Application.updateMany(
+//                       {
+//                         _id: {
+//                           $ne: application._id,
+//                         },
+//                         userId: application.userId,
+//                         status: {
+//                           $nin: [
+//                             "rejected",
+//                             "deleted",
+//                             "cancelled",
+//                             "accepted",
+//                             "finished",
+//                           ],
+//                         },
+//                       },
+//                       {
+//                         $set: {
+//                           status: "cancelled",
+//                         },
+//                       },
+//                       { multi: true }
+//                     )
+//                       .then(() => {
+//                         if (status === "accepted") {
+//                           Job.findOneAndUpdate(
+//                             {
+//                               _id: job._id,
+//                               userId: user._id,
+//                             },
+//                             {
+//                               $set: {
+//                                 acceptedCandidates: activeApplicationCount + 1,
+//                               },
+//                             }
+//                           )
+//                             .then(() => {
+//                               res.json({
+//                                 message: `Application ${status} successfully`,
+//                               });
+//                             })
+//                             .catch((err) => {
+//                               res.status(400).json(err);
+//                             });
+//                         } else {
+//                           res.json({
+//                             message: `Application ${status} successfully`,
+//                           });
+//                         }
+//                       })
+//                       .catch((err) => {
+//                         res.status(400).json(err);
+//                       });
+//                   })
+//                   .catch((err) => {
+//                     res.status(400).json(err);
+//                   });
+//               } else {
+//                 res.status(400).json({
+//                   message: "All positions for this job are already filled",
+//                 });
+//               }
+//             });
+//           });
+//         })
+//         .catch((err) => {
+//           res.status(400).json(err);
+//         });
+//     } else {
+//       Application.findOneAndUpdate(
+//         {
+//           _id: id,
+//           recruiterId: user._id,
+//           status: {
+//             $nin: ["rejected", "deleted", "cancelled"],
+//           },
+//         },
+//         {
+//           $set: {
+//             status: status,
+//           },
+//         }
+//       )
+//         .then((application) => {
+//           if (application === null) {
+//             res.status(400).json({
+//               message: "Application status cannot be updated",
+//             });
+//             return;
+//           }
+//           if (status === "finished") {
+//             res.json({
+//               message: `Job ${status} successfully`,
+//             });
+//           } else {
+//             res.json({
+//               message: `Application ${status} successfully`,
+//             });
+//           }
+//         })
+//         .catch((err) => {
+//           res.status(400).json(err);
+//         });
+//     }
+//   } else {
+//     if (status === "cancelled") {
+//       console.log(id);
+//       console.log(user._id);
+//       Application.findOneAndUpdate(
+//         {
+//           _id: id,
+//           userId: user._id,
+//         },
+//         {
+//           $set: {
+//             status: status,
+//           },
+//         }
+//       )
+//         .then((tmp) => {
+//           console.log(tmp);
+//           res.json({
+//             message: `Application ${status} successfully`,
+//           });
+//         })
+//         .catch((err) => {
+//           res.status(400).json(err);
+//         });
+//     } else {
+//       res.status(401).json({
+//         message: "You don't have permissions to update job status",
+//       });
+//     }
+//   }
+// });
+
+router.put("/applications/:id", jwtAuth, async (req, res) => {
   const user = req.user;
   const id = req.params.id;
   const status = req.body.status;
 
-  // "applied", // when a applicant is applied
-  // "shortlisted", // when a applicant is shortlisted
-  // "accepted", // when a applicant is accepted
-  // "rejected", // when a applicant is rejected
-  // "deleted", // when any job is deleted
-  // "cancelled", // an application is cancelled by its author or when other application is accepted
-  // "finished", // when job is over
-
-  if (user.type === "recruiter") {
-    if (status === "accepted") {
-      // get job id from application
-      // get job info for maxPositions count
-      // count applications that are already accepted
-      // compare and if condition is satisfied, then save
-
-      Application.findOne({
-        _id: id,
-        recruiterId: user._id,
-      })
-        .then((application) => {
-          if (application === null) {
-            res.status(404).json({
-              message: "Application not found",
-            });
-            return;
-          }
-
-          Job.findOne({
-            _id: application.jobId,
-            userId: user._id,
-          }).then((job) => {
-            if (job === null) {
-              res.status(404).json({
-                message: "Job does not exist",
-              });
-              return;
-            }
-
-            Application.countDocuments({
-              recruiterId: user._id,
-              jobId: job._id,
-              status: "accepted",
-            }).then((activeApplicationCount) => {
-              if (activeApplicationCount < job.maxPositions) {
-                // accepted
-                application.status = status;
-                application.dateOfJoining = req.body.dateOfJoining;
-                application
-                  .save()
-                  .then(() => {
-                    Application.updateMany(
-                      {
-                        _id: {
-                          $ne: application._id,
-                        },
-                        userId: application.userId,
-                        status: {
-                          $nin: [
-                            "rejected",
-                            "deleted",
-                            "cancelled",
-                            "accepted",
-                            "finished",
-                          ],
-                        },
-                      },
-                      {
-                        $set: {
-                          status: "cancelled",
-                        },
-                      },
-                      { multi: true }
-                    )
-                      .then(() => {
-                        if (status === "accepted") {
-                          Job.findOneAndUpdate(
-                            {
-                              _id: job._id,
-                              userId: user._id,
-                            },
-                            {
-                              $set: {
-                                acceptedCandidates: activeApplicationCount + 1,
-                              },
-                            }
-                          )
-                            .then(() => {
-                              res.json({
-                                message: `Application ${status} successfully`,
-                              });
-                            })
-                            .catch((err) => {
-                              res.status(400).json(err);
-                            });
-                        } else {
-                          res.json({
-                            message: `Application ${status} successfully`,
-                          });
-                        }
-                      })
-                      .catch((err) => {
-                        res.status(400).json(err);
-                      });
-                  })
-                  .catch((err) => {
-                    res.status(400).json(err);
-                  });
-              } else {
-                res.status(400).json({
-                  message: "All positions for this job are already filled",
-                });
-              }
-            });
-          });
-        })
-        .catch((err) => {
-          res.status(400).json(err);
-        });
-    } else {
-      Application.findOneAndUpdate(
-        {
+  try {
+    if (user.type === "recruiter") {
+      if (
+        status === "accepted" ||
+        status === "rejected" ||
+        status === "cancelled" ||
+        status === "finished" ||
+        status === "deleted"
+      ) {
+        const application = await Application.findOne({
           _id: id,
           recruiterId: user._id,
-          status: {
-            $nin: ["rejected", "deleted", "cancelled"],
-          },
-        },
-        {
-          $set: {
-            status: status,
-          },
-        }
-      )
-        .then((application) => {
-          if (application === null) {
-            res.status(400).json({
-              message: "Application status cannot be updated",
-            });
-            return;
-          }
-          if (status === "finished") {
-            res.json({
-              message: `Job ${status} successfully`,
-            });
-          } else {
-            res.json({
-              message: `Application ${status} successfully`,
-            });
-          }
-        })
-        .catch((err) => {
-          res.status(400).json(err);
         });
-    }
-  } else {
-    if (status === "cancelled") {
-      console.log(id);
-      console.log(user._id);
-      Application.findOneAndUpdate(
-        {
-          _id: id,
-          userId: user._id,
-        },
-        {
-          $set: {
-            status: status,
-          },
+
+        if (!application) {
+          return res.status(404).json({
+            message: "Application not found",
+          });
         }
-      )
-        .then((tmp) => {
-          console.log(tmp);
-          res.json({
+
+        const job = await Job.findOne({
+          _id: application.jobId,
+          userId: user._id,
+        });
+
+        if (!job) {
+          return res.status(404).json({
+            message: "Job does not exist",
+          });
+        }
+
+        const activeApplicationCount = await Application.countDocuments({
+          recruiterId: user._id,
+          jobId: job._id,
+          status: "accepted",
+        });
+
+        if (activeApplicationCount >= job.maxPositions) {
+          return res.status(400).json({
+            message: "All positions for this job are already filled",
+          });
+        }
+
+        application.status = status;
+        application.dateOfJoining = req.body.dateOfJoining;
+
+        await application.save();
+
+        await Application.updateMany(
+          {
+            _id: { $ne: application._id },
+            userId: application.userId,
+            status: {
+              $nin: [
+                "rejected",
+                "deleted",
+                "cancelled",
+                "accepted",
+                "finished",
+              ],
+            },
+          },
+          {
+            $set: {
+              status: "cancelled",
+            },
+          },
+          { multi: true }
+        );
+
+        if (status === "accepted") {
+          await Job.findOneAndUpdate(
+            {
+              _id: job._id,
+              userId: user._id,
+            },
+            {
+              $set: {
+                acceptedCandidates: activeApplicationCount + 1,
+              },
+            }
+          );
+        }
+
+        const applicant = await User.findById(application.userId);
+
+        const jobDetails = await Job.findById(job._id);
+
+        let emailSubject = "";
+        let emailBody = "";
+
+        switch (status) {
+          case "accepted":
+            emailSubject = `Your application for "${jobDetails.title}" has been accepted`;
+            emailBody = `
+      <html>
+        <head>
+          <style>
+            /* Define your styles here */
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              background-color: #f4f4f4;
+              margin: 0;
+              padding: 20px;
+            }
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              background: #fff;
+              padding: 30px;
+              border-radius: 8px;
+              box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+              color: #333;
+            }
+            p {
+              color: #666;
+            }
+            .btn {
+              display: inline-block;
+              padding: 10px 20px;
+              background: #401d1d;
+              color: #fff !important;
+            text-decoration: none !important;
+              border-radius: 5px;
+              margin-top: 15px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1>Congratulations!</h1>
+            <p>Your application for the job "${jobDetails.title}" has been accepted.</p>
+            <a href="https://linkit-job-board.vercel.app/applications" class="btn">View Details</a>
+          </div>
+        </body>
+      </html>
+    `;
+            break;
+          case "rejected":
+            emailSubject = `Your application for "${jobDetails.title}" has been rejected`;
+            emailBody = `
+      <html>
+        <head>
+        <style>
+        body {
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          background-color: #f4f4f4;
+          margin: 0;
+          padding: 20px;
+        }
+        .container {
+          max-width: 600px;
+          margin: 0 auto;
+          background: #fff;
+          padding: 30px;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+          color: #333;
+        }
+        p {
+          color: #666;
+        }
+        .btn {
+          display: inline-block;
+          padding: 10px 20px;
+          background: #401d1d;
+          color: #fff !important;
+            text-decoration: none !important;
+          border-radius: 5px;
+          margin-top: 15px;
+        }
+      </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1>Unfortunately,</h1>
+            <p>We regret to inform you that your application for the job "${jobDetails.title}" has been rejected.</p>
+            <p>Thank you for applying!</p>
+          </div>
+        </body>
+      </html>
+    `;
+            break;
+          case "finished":
+            emailSubject = `Job "${jobDetails.title}" has been completed`;
+            emailBody = `
+        <html>
+          <head>
+          <style>
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          }
+          h1 {
+            color: #333;
+          }
+          p {
+            color: #666;
+          }
+          .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #401d1d;
+            color: #fff !important;
+            text-decoration: none !important;
+            border-radius: 5px;
+            margin-top: 15px;
+          }
+        </style>
+          </head>
+          <body>
+          <div class="container">
+            <h1>Job "${jobDetails.title}" has been completed</h1>
+            <p>The job "${jobDetails.title}" has finished successfully. Thank you for your participation!</p>
+            <p>Please rate the job to help others and company</p>
+            <a href="https://linkit-job-board.vercel.app/applications" class="btn">Rate Job</a>
+            <p>Feel free to check other available opportunities.</p>
+            <a href="https://linkit-job-board.vercel.app/home" class="btn">Explore more Jobs</a>
+          </div>
+        </html>
+      `;
+            break;
+          case "cancelled":
+            emailSubject = `Job "${jobDetails.title}" has been cancelled`;
+            emailBody = `
+        <html>
+          <head>
+          <style>
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          }
+          h1 {
+            color: #333;
+          }
+          p {
+            color: #666;
+          }
+          .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #401d1d;
+            color: #fff !important;
+            text-decoration: none !important;
+            border-radius: 5px;
+            margin-top: 15px;
+          }
+        </style>
+          </head>
+          <body>
+          <div class="container">
+            <h1>Job "${jobDetails.title}" has been cancelled</h1>
+            <p>We regret to inform you that the job "${jobDetails.title}" has been cancelled.</p>
+            <p>Thank you for your interest and apologies for any inconvenience caused.</p>
+            <p>Feel free to explore other available opportunities.</p>
+            <a href="https://linkit-job-board.vercel.app/home" class="btn">Explore more Jobs</a>
+          </div>
+        </body>
+        </html>
+      `;
+            break;
+          case "deleted":
+            emailSubject = `Job "${jobDetails.title}" has been deleted`;
+            emailBody = `
+        <html>
+          <head>
+          <style>
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          }
+          h1 {
+            color: #333;
+          }
+          p {
+            color: #666;
+          }
+          .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #401d1d;
+            color: #fff !important;
+            text-decoration: none !important;
+            border-radius: 5px;
+            margin-top: 15px;
+          }
+        </style>
+          </head>
+          <body>
+      <div class="container">
+        <h1>Job "${jobDetails.title}" has been deleted</h1>
+        <p>We regret to inform you that the job "${jobDetails.title}" has been deleted.</p>
+        <p>Thank you for your interest and apologies for any inconvenience caused.</p>
+        <p>Feel free to explore other available opportunities.</p>
+        <a href="https://linkit-job-board.vercel.app/home" class="btn">Explore more Jobs</a>
+      </div>
+    </body>
+        </html>
+      `;
+            break;
+        }
+
+        await sendEmail({
+          to: applicant.email,
+          subject: emailSubject,
+          html: emailBody,
+        });
+
+        return res.json({
+          message: `Application ${status} successfully`,
+        });
+      } else {
+        const updatedApplication = await Application.findOneAndUpdate(
+          {
+            _id: id,
+            recruiterId: user._id,
+            status: { $nin: ["rejected", "deleted", "cancelled"] },
+          },
+          {
+            $set: {
+              status: status,
+            },
+          }
+        );
+
+        if (!updatedApplication) {
+          return res.status(400).json({
+            message: "Application status cannot be updated",
+          });
+        }
+
+        if (status === "finished") {
+          return res.json({
+            message: `Job ${status} successfully`,
+          });
+        } else {
+          return res.json({
             message: `Application ${status} successfully`,
           });
-        })
-        .catch((err) => {
-          res.status(400).json(err);
-        });
+        }
+      }
     } else {
-      res.status(401).json({
-        message: "You don't have permissions to update job status",
-      });
+      if (status === "cancelled") {
+        const canceledApplication = await Application.findOneAndUpdate(
+          {
+            _id: id,
+            userId: user._id,
+          },
+          {
+            $set: {
+              status: status,
+            },
+          }
+        );
+
+        if (!canceledApplication) {
+          return res.status(400).json({
+            message: "Application status cannot be updated",
+          });
+        }
+
+        return res.json({
+          message: `Application ${status} successfully`,
+        });
+      } else {
+        return res.status(401).json({
+          message: "You don't have permissions to update job status",
+        });
+      }
     }
+  } catch (err) {
+    return res.status(400).json(err);
   }
 });
 
@@ -1350,6 +1766,5 @@ router.get("/rating", jwtAuth, (req, res) => {
     });
   });
 });
-
 
 module.exports = router;

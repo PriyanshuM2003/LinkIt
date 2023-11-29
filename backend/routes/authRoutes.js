@@ -105,8 +105,8 @@ router.post("/signup", async (req, res) => {
                 font-size: 16px;
                 font-weight: bold;
                 text-align: center;
-                text-decoration: none;
-                color: #fff;
+                text-decoration: none !important;
+                color: #fff !important;
                 background-color: #401d1d;
                 border-radius: 5px;
             }
