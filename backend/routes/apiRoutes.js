@@ -409,8 +409,8 @@ router.put("/user", jwtAuth, (req, res) => {
           });
           return;
         }
-        if (data.name) {
-          recruiter.name = data.name;
+        if (data.companyName) {
+          recruiter.companyName = data.companyName;
         }
         if (data.contactNumber) {
           recruiter.contactNumber = data.contactNumber;
@@ -971,13 +971,14 @@ router.put("/applications/:id", jwtAuth, async (req, res) => {
         const applicant = await User.findById(application.userId);
 
         const jobDetails = await Job.findById(job._id);
+        const recruiterDetails = await Recruiter.findOne({ userId: user._id });
 
         let emailSubject = "";
         let emailBody = "";
 
         switch (status) {
           case "accepted":
-            emailSubject = `Your application for "${jobDetails.title}" has been accepted`;
+            emailSubject = `Your application for "${jobDetails.title}" at "${recruiterDetails.companyName}" has been accepted`;
             emailBody = `
       <html>
         <head>
@@ -1018,7 +1019,7 @@ router.put("/applications/:id", jwtAuth, async (req, res) => {
         <body>
           <div class="container">
             <h1>Congratulations!</h1>
-            <p>Your application for the job "${jobDetails.title}" has been accepted.</p>
+            <p>Your application for the job "${jobDetails.title}" at "${recruiterDetails.companyName}" has been accepted.</p>
             <a href="https://linkit-job-board.vercel.app/applications" class="btn">View Details</a>
           </div>
         </body>
@@ -1026,7 +1027,7 @@ router.put("/applications/:id", jwtAuth, async (req, res) => {
     `;
             break;
           case "rejected":
-            emailSubject = `Your application for "${jobDetails.title}" has been rejected`;
+            emailSubject = `Your application for "${jobDetails.title}" at "${recruiterDetails.companyName}" has been rejected`;
             emailBody = `
       <html>
         <head>
@@ -1066,7 +1067,7 @@ router.put("/applications/:id", jwtAuth, async (req, res) => {
         <body>
           <div class="container">
             <h1>Unfortunately,</h1>
-            <p>We regret to inform you that your application for the job "${jobDetails.title}" has been rejected.</p>
+            <p>We regret to inform you that your application for the job "${jobDetails.title}" at "${recruiterDetails.companyName}" has been rejected.</p>
             <p>Thank you for applying!</p>
           </div>
         </body>
@@ -1074,7 +1075,7 @@ router.put("/applications/:id", jwtAuth, async (req, res) => {
     `;
             break;
           case "finished":
-            emailSubject = `Job "${jobDetails.title}" has been completed`;
+            emailSubject = `Job "${jobDetails.title}" at "${recruiterDetails.companyName}" has been completed`;
             emailBody = `
         <html>
           <head>
@@ -1114,7 +1115,7 @@ router.put("/applications/:id", jwtAuth, async (req, res) => {
           <body>
           <div class="container">
             <h1>Job "${jobDetails.title}" has been completed</h1>
-            <p>The job "${jobDetails.title}" has finished successfully. Thank you for your participation!</p>
+            <p>The job "${jobDetails.title}" at "${recruiterDetails.companyName}" has finished successfully. Thank you for your participation!</p>
             <p>Please rate the job to help others and company</p>
             <a href="https://linkit-job-board.vercel.app/applications" class="btn">Rate Job</a>
             <p>Feel free to check other available opportunities.</p>
@@ -1124,7 +1125,7 @@ router.put("/applications/:id", jwtAuth, async (req, res) => {
       `;
             break;
           case "cancelled":
-            emailSubject = `Job "${jobDetails.title}" has been cancelled`;
+            emailSubject = `Job "${jobDetails.title}" at "${recruiterDetails.companyName}" has been cancelled`;
             emailBody = `
         <html>
           <head>
@@ -1163,8 +1164,8 @@ router.put("/applications/:id", jwtAuth, async (req, res) => {
           </head>
           <body>
           <div class="container">
-            <h1>Job "${jobDetails.title}" has been cancelled</h1>
-            <p>We regret to inform you that the job "${jobDetails.title}" has been cancelled.</p>
+            <h1>"${recruiterDetails.companyName}" has cancelled the job</h1>
+            <p>We regret to inform you that the "${recruiterDetails.companyName}" has cancelled the "${jobDetails.title}" job.</p>
             <p>Thank you for your interest and apologies for any inconvenience caused.</p>
             <p>Feel free to explore other available opportunities.</p>
             <a href="https://linkit-job-board.vercel.app/home" class="btn">Explore more Jobs</a>
@@ -1174,7 +1175,7 @@ router.put("/applications/:id", jwtAuth, async (req, res) => {
       `;
             break;
           case "deleted":
-            emailSubject = `Job "${jobDetails.title}" has been deleted`;
+            emailSubject = `"${recruiterDetails.companyName}" has deleted the Job`;
             emailBody = `
         <html>
           <head>
@@ -1213,8 +1214,8 @@ router.put("/applications/:id", jwtAuth, async (req, res) => {
           </head>
           <body>
       <div class="container">
-        <h1>Job "${jobDetails.title}" has been deleted</h1>
-        <p>We regret to inform you that the job "${jobDetails.title}" has been deleted.</p>
+        <h1>"${recruiterDetails.companyName}" has deleted the Job</h1>
+        <p>We regret to inform you that the "${recruiterDetails.companyName}" has deleted the "${jobDetails.title}" Job.</p>
         <p>Thank you for your interest and apologies for any inconvenience caused.</p>
         <p>Feel free to explore other available opportunities.</p>
         <a href="https://linkit-job-board.vercel.app/home" class="btn">Explore more Jobs</a>

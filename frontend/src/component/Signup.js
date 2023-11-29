@@ -121,6 +121,7 @@ const Signup = (props) => {
     email: "",
     password: "",
     name: "",
+    companyName: "",
     education: [],
     skills: [],
     resume: "",
@@ -158,6 +159,12 @@ const Signup = (props) => {
       error: false,
       message: "",
     },
+    companyName: {
+      untouched: true,
+      required: true,
+      error: false,
+      message: "",
+    },
   });
 
   const handleInput = (key, value) => {
@@ -182,13 +189,23 @@ const Signup = (props) => {
   const handleLogin = () => {
     const tmpErrorHandler = {};
     Object.keys(inputErrorHandler).forEach((obj) => {
-      if (inputErrorHandler[obj].required && inputErrorHandler[obj].untouched) {
-        tmpErrorHandler[obj] = {
-          required: true,
-          untouched: false,
-          error: true,
-          message: `${obj[0].toUpperCase() + obj.substr(1)} is required`,
-        };
+      if (
+        (signupDetails.type === "applicant" && obj === "name") ||
+        (signupDetails.type === "recruiter" && obj === "companyName")
+      ) {
+        if (
+          inputErrorHandler[obj].required &&
+          inputErrorHandler[obj].untouched
+        ) {
+          tmpErrorHandler[obj] = {
+            required: true,
+            untouched: false,
+            error: true,
+            message: `${obj[0].toUpperCase() + obj.substr(1)} is required`,
+          };
+        } else {
+          tmpErrorHandler[obj] = inputErrorHandler[obj];
+        }
       } else {
         tmpErrorHandler[obj] = inputErrorHandler[obj];
       }
@@ -233,8 +250,6 @@ const Signup = (props) => {
             skills: [],
             resume: "",
             profile: "",
-            bio: "",
-            contactNumber: "",
           });
           setEducation([
             {
@@ -265,13 +280,23 @@ const Signup = (props) => {
   const handleLoginRecruiter = () => {
     const tmpErrorHandler = {};
     Object.keys(inputErrorHandler).forEach((obj) => {
-      if (inputErrorHandler[obj].required && inputErrorHandler[obj].untouched) {
-        tmpErrorHandler[obj] = {
-          required: true,
-          untouched: false,
-          error: true,
-          message: `${obj[0].toUpperCase() + obj.substr(1)} is required`,
-        };
+      if (
+        (signupDetails.type === "applicant" && obj === "name") ||
+        (signupDetails.type === "recruiter" && obj === "companyName")
+      ) {
+        if (
+          inputErrorHandler[obj].required &&
+          inputErrorHandler[obj].untouched
+        ) {
+          tmpErrorHandler[obj] = {
+            required: true,
+            untouched: false,
+            error: true,
+            message: `${obj[0].toUpperCase() + obj.substr(1)} is required`,
+          };
+        } else {
+          tmpErrorHandler[obj] = inputErrorHandler[obj];
+        }
       } else {
         tmpErrorHandler[obj] = inputErrorHandler[obj];
       }
@@ -311,24 +336,13 @@ const Signup = (props) => {
           });
           console.log(response);
           setSignupDetails({
-            type: "applicant",
+            type: "recruiter",
             email: "",
             password: "",
-            name: "",
-            education: [],
-            skills: [],
-            resume: "",
-            profile: "",
+            companyName: "",
             bio: "",
             contactNumber: "",
           });
-          setEducation([
-            {
-              institutionName: "",
-              startYear: "",
-              endYear: "",
-            },
-          ]);
         })
         .catch((err) => {
           setPopup({
@@ -376,24 +390,56 @@ const Signup = (props) => {
               <MenuItem value="recruiter">Recruiter</MenuItem>
             </TextField>
           </Grid>
-          <Grid item>
-            <TextField
-              label="Name"
-              value={signupDetails.name}
-              onChange={(event) => handleInput("name", event.target.value)}
-              className={classes.inputBox}
-              error={inputErrorHandler.name.error}
-              helperText={inputErrorHandler.name.message}
-              onBlur={(event) => {
-                if (event.target.value === "") {
-                  handleInputError("name", true, "Name is required");
-                } else {
-                  handleInputError("name", false, "");
-                }
-              }}
-              variant="outlined"
-            />
-          </Grid>
+          {signupDetails.type === "applicant" ? (
+            <>
+              <Grid item>
+                <TextField
+                  label="Name"
+                  value={signupDetails.name}
+                  onChange={(event) => handleInput("name", event.target.value)}
+                  className={classes.inputBox}
+                  error={inputErrorHandler.name.error}
+                  helperText={inputErrorHandler.name.message}
+                  onBlur={(event) => {
+                    if (event.target.value === "") {
+                      handleInputError("name", true, "Name is required");
+                    } else {
+                      handleInputError("name", false, "");
+                    }
+                  }}
+                  variant="outlined"
+                />
+              </Grid>
+            </>
+          ) : (
+            <>
+              <Grid item>
+                <TextField
+                  label="Company Name"
+                  value={signupDetails.companyName}
+                  onChange={(event) =>
+                    handleInput("companyName", event.target.value)
+                  }
+                  className={classes.inputBox}
+                  error={inputErrorHandler.companyName.error}
+                  helperText={inputErrorHandler.companyName.message}
+                  onBlur={(event) => {
+                    if (event.target.value === "") {
+                      handleInputError(
+                        "companyName",
+                        true,
+                        "Company Name is required"
+                      );
+                    } else {
+                      handleInputError("companyName", false, "");
+                    }
+                  }}
+                  variant="outlined"
+                />
+              </Grid>
+            </>
+          )}
+
           <Grid item>
             <EmailInput
               label="Email"

@@ -6,7 +6,7 @@ let schema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
-    name: {
+    companyName: {
       type: String,
       required: true,
     },

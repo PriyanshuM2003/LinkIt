@@ -366,7 +366,7 @@ const ApplicationTile = (props) => {
     ) {
       const address = `${application.jobApplicant.resume}`;
       console.log(address);
-      window.open(address)
+      window.open(address);
       // axios(address, {
       //   method: "GET",
       //   responseType: "blob",
@@ -736,7 +736,12 @@ const JobApplications = (props) => {
         style={{ padding: "30px", minHeight: "93vh" }}
       >
         <Grid item>
-          <Typography variant="h2" style={{color:"#401d1d",fontWeight:"bold"}}>Applications</Typography>
+          <Typography
+            variant="h2"
+            style={{ color: "#401d1d", fontWeight: "bold" }}
+          >
+            Applications
+          </Typography>
         </Grid>
         <Grid item>
           <IconButton onClick={() => setFilterOpen(true)}>
@@ -760,8 +765,17 @@ const JobApplications = (props) => {
               </Grid>
             ))
           ) : (
-            <Typography variant="h5" style={{height:"50px", textAlign: "center",
-            background:"rgba(255,255,255,0.5)",marginLeft:"25%",marginRight:"25%",paddingTop:"15px" }}>
+            <Typography
+              variant="h5"
+              style={{
+                height: "50px",
+                textAlign: "center",
+                background: "rgba(255,255,255,0.5)",
+                marginLeft: "25%",
+                marginRight: "25%",
+                paddingTop: "15px",
+              }}
+            >
               No Applications Found
             </Typography>
           )}

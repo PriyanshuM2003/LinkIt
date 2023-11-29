@@ -117,7 +117,7 @@ const JobTile = (props) => {
             Duration :{" "}
             {job.duration !== 0 ? `${job.duration} month` : `Flexible`}
           </Grid>
-          <Grid item>Posted By : {job.recruiter.name}</Grid>
+          <Grid item>Posted By : {job.recruiter.companyName}</Grid>
           <Grid item>Application Deadline : {deadline}</Grid>
 
           <Grid item>

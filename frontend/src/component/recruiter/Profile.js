@@ -34,7 +34,7 @@ const Profile = (props) => {
   const setPopup = useContext(SetPopupContext);
 
   const [profileDetails, setProfileDetails] = useState({
-    name: "",
+    companyName: "",
     bio: "",
     contactNumber: "",
   });
@@ -123,7 +123,6 @@ const Profile = (props) => {
         alignItems="center"
         style={{ padding: "30px", minHeight: "93vh" }}
       >
-        
         <Grid item xs style={{ width: "100%" }}>
           <Paper
             style={{
@@ -137,16 +136,22 @@ const Profile = (props) => {
             }}
           >
             <Grid container direction="column" alignItems="stretch" spacing={3}>
-            <Grid item >
-              <Typography variant="h3" component="h2" style={{color:"#401d1d",fontWeight:"bold"}}>
-                Profile
-              </Typography>
-            </Grid>
+              <Grid item>
+                <Typography
+                  variant="h3"
+                  component="h2"
+                  style={{ color: "#401d1d", fontWeight: "bold" }}
+                >
+                  Profile
+                </Typography>
+              </Grid>
               <Grid item>
                 <TextField
-                  label="Name"
-                  value={profileDetails.name}
-                  onChange={(event) => handleInput("name", event.target.value)}
+                  label="Company Name"
+                  value={profileDetails.companyName}
+                  onChange={(event) =>
+                    handleInput("companyName", event.target.value)
+                  }
                   className={classes.inputBox}
                   variant="outlined"
                   fullWidth

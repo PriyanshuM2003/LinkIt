@@ -48,7 +48,7 @@ router.post("/signup", async (req, res) => {
       user.type === "recruiter"
         ? new Recruiter({
             userId: user._id,
-            name: data.name,
+            companyName: data.companyName,
             contactNumber: data.contactNumber,
             bio: data.bio,
           })
@@ -126,7 +126,11 @@ router.post("/signup", async (req, res) => {
     <body>
         <div class="container">
             <h1>Welcome to LinkIt!</h1>
-            <p class="welcome-text">Dear ${data.name},</p>
+            ${
+              data.type === "recruiter"
+                ? `<p class="welcome-text">Dear ${data.companyName},</p>`
+                : `<p class="welcome-text">Dear ${data.name},</p>`
+            }
             <p>Thank you for signing up with us. We're thrilled to have you on board.</p>
             <p>We are dedicated to providing you with a great experience.</p>
             <p>Please click the button below to get started:</p>
