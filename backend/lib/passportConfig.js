@@ -1,8 +1,10 @@
 const passport = require("passport");
 const Strategy = require("passport-local").Strategy;
+
 const passportJWT = require("passport-jwt");
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
+
 const User = require("../db/User");
 const authKeys = require("./authKeys");
 
@@ -22,25 +24,30 @@ passport.use(
       usernameField: "email",
       passReqToCallback: true,
     },
-    async (req, email, password, done, res) => {
-      try {
-        const user = await User.findOne({ email: email });
-
+    (req, email, password, done, res) => {
+      // console.log(email, password);
+      User.findOne({ email: email }, (err, user) => {
+        if (err) {
+          return done(err);
+        }
         if (!user) {
           return done(null, false, {
             message: "User does not exist",
           });
         }
 
-        await user.login(password);
-
-        user["_doc"] = filterJson(user["_doc"], ["password", "__v"]);
-        return done(null, user);
-      } catch (err) {
-        return done(err, false, {
-          message: "Password is incorrect.",
-        });
-      }
+        user
+          .login(password)
+          .then(() => {
+            user["_doc"] = filterJson(user["_doc"], ["password", "__v"]);
+            return done(null, user);
+          })
+          .catch((err) => {
+            return done(err, false, {
+              message: "Password is incorrect.",
+            });
+          });
+      });
     }
   )
 );
@@ -51,23 +58,23 @@ passport.use(
       jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
       secretOrKey: authKeys.jwtSecretKey,
     },
-    async (jwt_payload, done) => {
-      try {
-        const user = await User.findById(jwt_payload._id);
-
-        if (!user) {
-          return done(null, false, {
-            message: "JWT Token does not exist",
+    (jwt_payload, done) => {
+      User.findById(jwt_payload._id)
+        .then((user) => {
+          console.log(Object.keys(jwt_payload));
+          if (!user) {
+            return done(null, false, {
+              message: "JWT Token does not exist",
+            });
+          }
+          user["_doc"] = filterJson(user["_doc"], ["password", "__v"]);
+          return done(null, user);
+        })
+        .catch((err) => {
+          return done(err, false, {
+            message: "Incorrect Token",
           });
-        }
-
-        user["_doc"] = filterJson(user["_doc"], ["password", "__v"]);
-        return done(null, user);
-      } catch (err) {
-        return done(err, false, {
-          message: "Incorrect Token",
         });
-      }
     }
   )
 );
