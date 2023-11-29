@@ -34,8 +34,7 @@ const Verify = () => {
           setVerificationStatus("Email verification failed");
         }
       } catch (error) {
-        setVerificationStatus("Email verified successfully");
-        // setVerificationStatus("Email verification failed");
+        setVerificationStatus("Email verification failed");
       }
     };
 
