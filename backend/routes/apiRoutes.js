@@ -789,9 +789,11 @@ router.put("/applications/:id", jwtAuth, async (req, res) => {
         switch (status) {
           case "accepted":
             emailSubject = `Your application for "${jobDetails.title}" at "${recruiterDetails.companyName}" has been accepted`;
-            emailBody = `
-      <html>
-        <head>
+            emailBody = `<!DOCTYPE html>
+            <html lang="en">
+            
+            <head>
+                <meta charset="UTF-8">
           <style>
             /* Define your styles here */
             body {
@@ -838,9 +840,11 @@ router.put("/applications/:id", jwtAuth, async (req, res) => {
             break;
           case "rejected":
             emailSubject = `Your application for "${jobDetails.title}" at "${recruiterDetails.companyName}" has been rejected`;
-            emailBody = `
-      <html>
-        <head>
+            emailBody = `<!DOCTYPE html>
+            <html lang="en">
+            
+            <head>
+                <meta charset="UTF-8">
         <style>
         body {
           font-family: Arial, sans-serif;
@@ -886,9 +890,11 @@ router.put("/applications/:id", jwtAuth, async (req, res) => {
             break;
           case "finished":
             emailSubject = `Job "${jobDetails.title}" at "${recruiterDetails.companyName}" has been completed`;
-            emailBody = `
-        <html>
-          <head>
+            emailBody = `<!DOCTYPE html>
+            <html lang="en">
+            
+            <head>
+                <meta charset="UTF-8">
           <style>
           body {
             font-family: Arial, sans-serif;
@@ -936,9 +942,11 @@ router.put("/applications/:id", jwtAuth, async (req, res) => {
             break;
           case "cancelled":
             emailSubject = `Job "${jobDetails.title}" at "${recruiterDetails.companyName}" has been cancelled`;
-            emailBody = `
-        <html>
-          <head>
+            emailBody = `<!DOCTYPE html>
+            <html lang="en">
+            
+            <head>
+                <meta charset="UTF-8">
           <style>
           body {
             font-family: Arial, sans-serif;
@@ -986,9 +994,11 @@ router.put("/applications/:id", jwtAuth, async (req, res) => {
             break;
           case "deleted":
             emailSubject = `"${recruiterDetails.companyName}" has deleted the Job`;
-            emailBody = `
-        <html>
-          <head>
+            emailBody = `<!DOCTYPE html>
+            <html lang="en">
+            
+            <head>
+                <meta charset="UTF-8">>
           <style>
           body {
             font-family: Arial, sans-serif;
