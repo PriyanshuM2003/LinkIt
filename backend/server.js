@@ -14,15 +14,25 @@ const corsOptions = {
 const db = require("./config/keys").mongoURI;
 
 // Updated MongoDB connection options
-mongoose
-  .connect(db)
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.error("MongoDB Connection Error:", err));
+async function connectToDB() {
+  try {
+    await mongoose.connect(db);
+    console.log("MongoDB Connected");
+  } catch (err) {
+    console.error("MongoDB Connection Error:", err);
+  }
+}
+
+connectToDB();
 
 // Initialize directories
-const createDirectoryIfNotExists = (directory) => {
-  if (!fs.existsSync(directory)) {
-    fs.mkdirSync(directory);
+const createDirectoryIfNotExists = async (directory) => {
+  try {
+    if (!fs.existsSync(directory)) {
+      await fs.promises.mkdir(directory, { recursive: true });
+    }
+  } catch (err) {
+    console.error("Error creating directory:", err);
   }
 };
 
