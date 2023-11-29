@@ -160,10 +160,12 @@ router.get("/verify/:token", async (req, res) => {
     const decoded = jwt.verify(token, authKeys.jwtSecretKey);
     const user = await User.findOne({ email: decoded.email });
 
-    if (!user || user.verificationToken !== token) {
-      return res
-        .status(404)
-        .json({ message: "Invalid token or user not found" });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.verificationToken !== token) {
+      return res.status(404).json({ message: "Token mismatch" });
     }
 
     if (user.isVerified) {

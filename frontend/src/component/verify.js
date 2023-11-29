@@ -21,6 +21,7 @@ const Verify = () => {
 
         if (response.status === 200) {
           setVerificationStatus("Email verified successfully");
+
           const timer = setInterval(() => {
             setRedirectTimer((prevTimer) => prevTimer - 1);
           }, 1000);
@@ -33,8 +34,15 @@ const Verify = () => {
           setVerificationStatus("Email verification failed");
         }
       } catch (error) {
-        console.error("Verification error:", error);
-        setVerificationStatus("Email verification failed");
+        if (error.response && error.response.status === 404) {
+          if (error.response.data && error.response.data.message) {
+            setVerificationStatus(error.response.data.message);
+          } else {
+            setVerificationStatus("Email verification failed");
+          }
+        } else {
+          console.error("Verification error:", error);
+        }
       }
     };
 
