@@ -442,7 +442,7 @@ const Signup = (props) => {
               <Grid item>
                 <FileUploadInput
                   className={classes.inputBox}
-                  label="Resume (Images only)"
+                  label="Resume (Images/pdf only)"
                   icon={<DescriptionIcon />}
                   // value={files.resume}
                   // onChange={(event) =>

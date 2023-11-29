@@ -183,33 +183,35 @@ router.get("/verify/:token", async (req, res) => {
   }
 });
 
-router.post("/login", (req, res, next) => {
+router.post("/login", async (req, res, next) => {
   passport.authenticate(
     "local",
     { session: false },
-    function (err, user, info) {
-      if (err) {
-        return next(err);
-      }
-      if (!user) {
-        res.status(401).json(info);
-        return;
-      }
+    async function (err, user, info) {
+      try {
+        if (err) {
+          return next(err);
+        }
+        if (!user) {
+          return res.status(401).json(info);
+        }
 
-      if (!user.isVerified) {
-        res.status(401).json({
-          message:
-            "Please verify yourself by the verification email sent to you.",
+        if (!user.isVerified) {
+          return res.status(401).json({
+            message:
+              "Please verify yourself by the verification email sent to you.",
+          });
+        }
+
+        // Token
+        const token = jwt.sign({ _id: user._id }, authKeys.jwtSecretKey);
+        res.json({
+          token: token,
+          type: user.type,
         });
-        return;
+      } catch (error) {
+        next(error);
       }
-
-      // Token
-      const token = jwt.sign({ _id: user._id }, authKeys.jwtSecretKey);
-      res.json({
-        token: token,
-        type: user.type,
-      });
     }
   )(req, res, next);
 });

@@ -24,30 +24,24 @@ passport.use(
       usernameField: "email",
       passReqToCallback: true,
     },
-    (req, email, password, done, res) => {
-      // console.log(email, password);
-      User.findOne({ email: email }, (err, user) => {
-        if (err) {
-          return done(err);
-        }
+    async (req, email, password, done, res) => {
+      try {
+        const user = await User.findOne({ email: email });
+
         if (!user) {
           return done(null, false, {
             message: "User does not exist",
           });
         }
 
-        user
-          .login(password)
-          .then(() => {
-            user["_doc"] = filterJson(user["_doc"], ["password", "__v"]);
-            return done(null, user);
-          })
-          .catch((err) => {
-            return done(err, false, {
-              message: "Password is incorrect.",
-            });
-          });
-      });
+        await user.login(password);
+        user["_doc"] = filterJson(user["_doc"], ["password", "__v"]);
+        return done(null, user);
+      } catch (err) {
+        return done(err, false, {
+          message: "Password is incorrect.",
+        });
+      }
     }
   )
 );
