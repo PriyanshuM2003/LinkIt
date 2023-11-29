@@ -4,8 +4,7 @@
   "description": "node js app",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "start:babel": "babel-node server.js"
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
@@ -29,20 +28,5 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "uuid": "^9.0.1"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.23.4",
-    "@babel/core": "^7.23.5",
-    "@babel/preset-env": "^7.23.5"
-  },
-  "presets": [
-    [
-      "@babel/preset-env",
-      {
-        "targets": {
-          "node": "14.17.0"
-        }
-      }
-    ]
-  ]
+  }
 }
