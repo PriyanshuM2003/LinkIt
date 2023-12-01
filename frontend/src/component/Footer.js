@@ -32,7 +32,11 @@ function Footer() {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Typography variant="body2" align="right">
-              <Link href="mailto:tester146924@gmail.com" color="inherit">
+              <Link
+                href="mailto:tester146924@gmail.com"
+                target="_blank"
+                color="inherit"
+              >
                 Contact Us
               </Link>
               {" | "}
