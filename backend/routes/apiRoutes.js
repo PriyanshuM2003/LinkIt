@@ -1732,7 +1732,7 @@ router.put("/updatePremium", jwtAuth, async (req, res) => {
   }
 });
 
-router.get("/userPlanData/:userId", async (req, res) => {
+router.get("/userPlanData/:userId", jwtAuth, async (req, res) => {
   try {
     const userId = req.params.userId;
 
