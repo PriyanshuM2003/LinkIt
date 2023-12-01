@@ -18,6 +18,8 @@ import RecruiterProfile from "./component/recruiter/Profile";
 import MessagePopup from "./lib/MessagePopup";
 import isAuth, { userType } from "./lib/isAuth";
 import Verify from "./component/verify";
+import Plan from "./component/plan";
+import Footer from "./component/Footer";
 
 const useStyles = makeStyles((theme) => ({
   body: {
@@ -57,9 +59,9 @@ function App() {
               <Route exact path="/login" element={<Login />} />
               <Route exact path="/signup" element={<Signup />} />
               <Route exact path="/logout" element={<Logout />} />
+              <Route exact path="/plan" element={<Plan />} />
               <Route exact path="/home" element={<Home />} />
               <Route exact path="/applications" element={<Applications />} />
-
               <Route
                 exact
                 path="/profile"
@@ -82,6 +84,9 @@ function App() {
               <Route element={<ErrorPage />} />
             </Routes>
           </Grid>
+        </Grid>
+        <Grid>
+          <Footer />
         </Grid>
         <MessagePopup
           open={popup.open}

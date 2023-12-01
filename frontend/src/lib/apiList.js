@@ -11,6 +11,11 @@ const apiList = {
   user: `${server}/api/user`,
   applicants: `${server}/api/applicants`,
   verifyEmail: `${server}/auth/verify`,
+  purchasePlan: `${server}/api/purchasePlan`,
+  verifyPayment: `${server}/api/verifyPayment`,
+  updatePlan: `${server}/api/updatePlan`,
+  updatePremium: `${server}/api/updatePremium`,
+  userPlanData: `${server}/api/userPlanData`,
 };
 
 export default apiList;

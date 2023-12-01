@@ -1,16 +1,16 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const jwtAuth = require("../lib/jwtAuth");
-
 const User = require("../db/User");
+const Plan = require("../db/Plan");
 const JobApplicant = require("../db/JobApplicant");
 const Recruiter = require("../db/Recruiter");
 const Job = require("../db/Job");
 const Application = require("../db/Application");
 const Rating = require("../db/Rating");
 const { sendEmail } = require("../lib/mailer");
-//The express.Router() function is used to create a new router object.
-//This function is used when you want to create a new router object in your program to handle requests.
+const Razorpay = require("razorpay");
+
 const router = express.Router();
 
 // To add new job
@@ -1586,6 +1586,179 @@ router.get("/rating", jwtAuth, (req, res) => {
       rating: rating.rating,
     });
   });
+});
+
+// Premiun Plan
+router.post("/purchasePlan", jwtAuth, async (req, res) => {
+  try {
+    var instance = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY,
+      key_secret: process.env.RAZORPAY_KEY_SECRET,
+    });
+
+    const { userId, userType, plan, amount } = req.body;
+
+    const receipt = `plan_${userId}_${Date.now()}`.slice(0, 40);
+    const options = {
+      amount: amount * 100,
+      currency: "INR",
+      receipt,
+      payment_capture: 1,
+    };
+
+    const order = await instance.orders.create(options);
+
+    const newPlan = new Plan({
+      userId,
+      userType,
+      plan,
+      amount,
+      order_id: order.id,
+    });
+
+    await newPlan.save();
+
+    res.json({ orderId: order.id, orderAmount: order.amount });
+  } catch (error) {
+    console.error("Error creating Razorpay order:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while creating the order" });
+  }
+});
+
+router.post("/verifyPayment", jwtAuth, async (req, res) => {
+  try {
+    const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
+      req.body;
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+    const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
+    hmac.update(body.toString());
+    const expectedSignature = hmac.digest("hex");
+    const isAuthentic = expectedSignature === razorpay_signature;
+
+    if (isAuthentic) {
+      res
+        .status(200)
+        .json({ message: "Payment verified and saved successfully" });
+    } else {
+      res.status(400).json({ error: "Invalid payment signature" });
+    }
+  } catch (error) {
+    console.error("Error while saving payment:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.put("/updatePlan", jwtAuth, async (req, res) => {
+  try {
+    const { userId, userType, plan, paymentStatus, payment_id, order_id } =
+      req.body;
+
+    const currentDate = new Date();
+    let expireDate = new Date(currentDate);
+
+    if (plan === "Monthly") {
+      expireDate.setMonth(expireDate.getMonth() + 1);
+    } else if (plan === "Quarterly") {
+      expireDate.setMonth(expireDate.getMonth() + 3);
+    } else if (plan === "Yearly") {
+      expireDate.setFullYear(expireDate.getFullYear() + 1);
+    }
+
+    const expireon = expireDate.toISOString();
+
+    const updatedPlan = await Plan.findOneAndUpdate(
+      { userId, userType, plan },
+      {
+        $set: {
+          expireon,
+          paymentStatus,
+          payment_id,
+          order_id,
+        },
+      },
+      { new: true }
+    );
+
+    if (!updatedPlan) {
+      return res.status(404).json({ error: "Plan not found" });
+    }
+
+    res.json({ message: "Plan details updated successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Endpoint to update premium status based on successful payment
+router.put("/updatePremium", jwtAuth, async (req, res) => {
+  const { userId, userType, paymentStatus } = req.body;
+
+  try {
+    if (!userId || !userType || !paymentStatus) {
+      return res.status(400).json({ message: "Invalid data" });
+    }
+
+    let userSchema;
+    if (userType === "recruiter") {
+      userSchema = Recruiter;
+    } else {
+      userSchema = JobApplicant;
+    }
+
+    const updatedUser = await userSchema.findOneAndUpdate(
+      { userId: userId },
+      { $set: { premium: paymentStatus === "Paid" } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: `${userType} not found` });
+    }
+
+    if (paymentStatus === "Expired") {
+      await userSchema.findOneAndUpdate(
+        { userId: userId },
+        { $set: { premium: false } }
+      );
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Premium status updated successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+router.get("/userPlanData/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const userPlanData = await Plan.findOne({ userId });
+
+    if (!userPlanData) {
+      return res.status(404).json({ message: "User plan data not found" });
+    }
+
+    if (userPlanData.expireon) {
+      const expireDate = new Date(userPlanData.expireon);
+      const currentDate = new Date();
+
+      if (currentDate > expireDate) {
+        await Plan.findOneAndDelete({ userId });
+        return res
+          .status(200)
+          .json({ message: "Plan data expired and deleted" });
+      }
+    }
+
+    res.status(200).json(userPlanData);
+  } catch (error) {
+    console.error("Error fetching user's plan data:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 module.exports = router;

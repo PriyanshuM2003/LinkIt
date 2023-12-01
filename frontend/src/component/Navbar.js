@@ -72,6 +72,9 @@ const Navbar = (props) => {
                 <Button color="inherit" onClick={() => handleClick("/profile")}>
                   <Typography style={{ fontSize: "18px" }}>Profile</Typography>
                 </Button>
+                <Button color="inherit" onClick={() => handleClick("/plan")}>
+                  <Typography style={{ fontSize: "18px" }}>Upgrade</Typography>
+                </Button>
                 <Button color="inherit" onClick={() => handleClick("/logout")}>
                   <Typography style={{ fontSize: "18px" }}>Logout</Typography>
                 </Button>
@@ -89,6 +92,9 @@ const Navbar = (props) => {
                 </Button>
                 <Button color="inherit" onClick={() => handleClick("/profile")}>
                   <Typography style={{ fontSize: "18px" }}>Profile</Typography>
+                </Button>
+                <Button color="inherit" onClick={() => handleClick("/plan")}>
+                  <Typography style={{ fontSize: "18px" }}>Upgrade</Typography>
                 </Button>
                 <Button color="inherit" onClick={() => handleClick("/logout")}>
                   <Typography style={{ fontSize: "18px" }}>Logout</Typography>

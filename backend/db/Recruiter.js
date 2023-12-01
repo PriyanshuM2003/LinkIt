@@ -22,6 +22,10 @@ let schema = new mongoose.Schema(
     bio: {
       type: String,
     },
+    premium: {
+      type: Boolean,
+      default: false,
+    },
   },
   { collation: { locale: "en" }, timestamps: true }
 );
