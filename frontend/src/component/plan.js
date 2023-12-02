@@ -105,14 +105,7 @@ const Plan = () => {
               }
             );
 
-            await axios.delete(`${apiList.userPlanData}/${userId}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            });
-
-            setUserPlanData(null);
+            setUserPlanData({ ...response.data, paymentStatus: "Expired" });
           } else {
             setUserPlanData(response.data);
           }
@@ -489,13 +482,6 @@ const Plan = () => {
                       </CardContent>
                     </Card>
                   )}
-                  {/* {isAnyPlanPurchased && !isPlanPurchased && (
-                    <div style={{ textAlign: "center", marginTop: "10px" }}>
-                      <Typography variant="caption">
-                        Plan already purchased
-                      </Typography>
-                    </div>
-                  )} */}
                 </Grid>
               );
             })}

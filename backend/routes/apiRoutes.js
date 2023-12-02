@@ -1747,10 +1747,11 @@ router.get("/userPlanData/:userId", jwtAuth, async (req, res) => {
       const currentDate = new Date();
 
       if (currentDate > expireDate) {
-        await Plan.findOneAndDelete({ userId });
-        return res
-          .status(200)
-          .json({ message: "Plan data expired and deleted" });
+        await Plan.findOneAndUpdate(
+          { userId },
+          { $set: { paymentStatus: "Expired" } }
+        );
+        return res.status(200).json({ message: "Plan data expired" });
       }
     }
 
