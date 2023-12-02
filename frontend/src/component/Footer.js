@@ -40,7 +40,7 @@ function Footer() {
                 Contact Us
               </Link>
               {" | "}
-              <Link href="#" color="inherit">
+              <Link href="/aboutus" color="inherit">
                 About Us
               </Link>
               {" | "}

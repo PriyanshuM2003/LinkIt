@@ -20,6 +20,7 @@ import isAuth, { userType } from "./lib/isAuth";
 import Verify from "./component/verify";
 import Plan from "./component/plan";
 import Footer from "./component/Footer";
+import About from "./component/About";
 
 const useStyles = makeStyles((theme) => ({
   body: {
@@ -62,6 +63,7 @@ function App() {
               <Route exact path="/plan" element={<Plan />} />
               <Route exact path="/home" element={<Home />} />
               <Route exact path="/applications" element={<Applications />} />
+              <Route exact path="/aboutus" element={<About />} />
               <Route
                 exact
                 path="/profile"
