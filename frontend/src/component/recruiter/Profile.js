@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/material.css";
+import StarsIcon from "@material-ui/icons/Stars";
 
 import { SetPopupContext } from "../../App";
 
@@ -137,13 +138,18 @@ const Profile = (props) => {
           >
             <Grid container direction="column" alignItems="stretch" spacing={3}>
               <Grid item>
-                <Typography
-                  variant="h3"
-                  component="h2"
-                  style={{ color: "#401d1d", fontWeight: "bold" }}
-                >
-                  Profile
-                </Typography>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Typography
+                    variant="h3"
+                    component="h2"
+                    style={{ color: "#401d1d", fontWeight: "bold" }}
+                  >
+                    Profile
+                  </Typography>
+                  {profileDetails && profileDetails.premium ? (
+                    <StarsIcon style={{ color: "#401d1d" }} />
+                  ) : null}
+                </div>
               </Grid>
               <Grid item>
                 <TextField
@@ -195,7 +201,11 @@ const Profile = (props) => {
             <Button
               variant="contained"
               color="primary"
-              style={{ padding: "10px 50px", marginTop: "30px" }}
+              style={{
+                padding: "10px 50px",
+                backgroundColor: "#401d1d",
+                marginTop: "30px",
+              }}
               onClick={() => handleUpdate()}
             >
               Update Details

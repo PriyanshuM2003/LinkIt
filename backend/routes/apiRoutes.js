@@ -698,6 +698,7 @@ router.put("/applications/:id", jwtAuth, async (req, res) => {
     if (user.type === "recruiter") {
       if (
         status === "accepted" ||
+        status === "shortlisted" ||
         status === "rejected" ||
         status === "cancelled" ||
         status === "finished" ||
@@ -749,6 +750,7 @@ router.put("/applications/:id", jwtAuth, async (req, res) => {
             status: {
               $nin: [
                 "rejected",
+                "shortlisted",
                 "deleted",
                 "cancelled",
                 "accepted",
@@ -832,6 +834,57 @@ router.put("/applications/:id", jwtAuth, async (req, res) => {
           <div class="container">
             <h1>Congratulations!</h1>
             <p>Your application for the job "${jobDetails.title}" at "${recruiterDetails.companyName}" has been accepted.</p>
+            <a href="https://linkit-job-board.vercel.app/applications" class="btn">View Details</a>
+          </div>
+        </body>
+      </html>
+    `;
+            break;
+          case "shortlisted":
+            emailSubject = `You are shortlisted for "${jobDetails.title}" application at "${recruiterDetails.companyName}".`;
+            emailBody = `<!DOCTYPE html>
+            <html lang="en">
+            
+            <head>
+                <meta charset="UTF-8">
+          <style>
+            /* Define your styles here */
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              background-color: #f4f4f4;
+              margin: 0;
+              padding: 20px;
+            }
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              background: #fff;
+              padding: 30px;
+              border-radius: 8px;
+              box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+              color: #333;
+            }
+            p {
+              color: #666;
+            }
+            .btn {
+              display: inline-block;
+              padding: 10px 20px;
+              background: #401d1d;
+              color: #fff !important;
+            text-decoration: none !important;
+              border-radius: 5px;
+              margin-top: 15px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1>Congratulations!</h1>
+            <p>You are shortlisted for "${jobDetails.title}" application at "${recruiterDetails.companyName}".</p>
             <a href="https://linkit-job-board.vercel.app/applications" class="btn">View Details</a>
           </div>
         </body>

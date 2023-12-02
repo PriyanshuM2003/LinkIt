@@ -302,6 +302,7 @@ const Plan = () => {
         title: "Free",
         price: "₹0",
         features: [
+          "No Premium Badge.",
           "No Access to Post Jobs on our Platform.",
           "0 Job Posting.",
           "No Chance to recruit Premium Applicants.",
@@ -312,6 +313,7 @@ const Plan = () => {
         title: "Monthly",
         price: "₹199",
         features: [
+          "Premium Badge.",
           "Get Access to Post Jobs on our Platform.",
           "5 Job Posting.",
           "Access to recruit Premium Applicants.",
@@ -322,6 +324,7 @@ const Plan = () => {
         title: "Quarterly",
         price: "₹299",
         features: [
+          "Premium Badge.",
           "Get Access to Post Jobs on our Platform.",
           "15 Job Posting.",
           "Access to recruit Premium Applicants.",
@@ -332,6 +335,7 @@ const Plan = () => {
         title: "Yearly",
         price: "₹399",
         features: [
+          "Premium Badge.",
           "Get Access to Post Jobs on our Platform.",
           "Unlimited Job Posting.",
           "Access to recruit Premium Applicants.",

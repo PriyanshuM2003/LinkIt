@@ -46,6 +46,28 @@ const CreateJobs = (props) => {
     salary: 0,
   });
 
+  const [profileDetails, setProfileDetails] = useState();
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = () => {
+    axios
+      .get(apiList.user, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setProfileDetails(response.data);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+  };
+
   const handleInput = (key, value) => {
     setJobDetails({
       ...jobDetails,
@@ -252,14 +274,31 @@ const CreateJobs = (props) => {
                   />
                 </Grid>
               </Grid>
-              <Button
-                variant="contained"
-                color="primary"
-                style={{ padding: "10px 50px", marginTop: "30px" }}
-                onClick={() => handleUpdate()}
-              >
-                Create Job
-              </Button>
+              {profileDetails && profileDetails.premium ? (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  style={{
+                    padding: "10px 50px",
+                    marginTop: "30px",
+                    backgroundColor: "#401d1d",
+                  }}
+                  onClick={() => handleUpdate()}
+                >
+                  Create Job
+                </Button>
+              ) : (
+                <Typography
+                  style={{
+                    fontSize: "1.5rem",
+                    marginTop: "1rem",
+                    color: "#401d1d",
+                    fontWeight: "700",
+                  }}
+                >
+                  Please Buy Our Premium Plan to Post Job
+                </Typography>
+              )}
             </Paper>
           </Grid>
         </Grid>

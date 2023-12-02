@@ -14,7 +14,7 @@ import ChipInput from "material-ui-chip-input";
 import FileUploadInput from "../lib/FileUploadInput";
 import DescriptionIcon from "@material-ui/icons/Description";
 import FaceIcon from "@material-ui/icons/Face";
-
+import StarsIcon from "@material-ui/icons/Stars";
 import { SetPopupContext } from "../App";
 
 import apiList, { server } from "../lib/apiList";
@@ -289,13 +289,22 @@ const Profile = (props) => {
                 src={`${profileDetails.profile}`}
                 className={classes.avatar}
               />
-              <Typography
-                variant="h3"
-                component="h2"
-                style={{ color: "#401d1d", fontWeight: "bold" }}
-              >
-                Profile
-              </Typography>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Typography
+                  variant="h3"
+                  component="h2"
+                  style={{
+                    color: "#401d1d",
+                    fontWeight: "bold",
+                    marginRight: "8px",
+                  }}
+                >
+                  Profile
+                </Typography>
+                {profileDetails && profileDetails.premium ? (
+                  <StarsIcon style={{ color: "#401d1d" }} />
+                ) : null}
+              </div>
             </Grid>
             <Grid container direction="column" alignItems="" spacing={3}>
               {/* <Grid item >
