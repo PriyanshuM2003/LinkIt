@@ -14,7 +14,7 @@ import "../index.css";
 import PasswordInput from "../lib/PasswordInput";
 import EmailInput from "../lib/EmailInput";
 import { SetPopupContext } from "../App";
-
+import { useNavigate } from "react-router-dom";
 import apiList from "../lib/apiList";
 import isAuth from "../lib/isAuth";
 
@@ -52,6 +52,16 @@ const Login = (props) => {
       message: "",
     },
   });
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/");
+      return;
+    }
+  }, [navigate]);
 
   const handleInput = (key, value) => {
     setLoginDetails({

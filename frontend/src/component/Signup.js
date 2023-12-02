@@ -15,6 +15,7 @@ import DescriptionIcon from "@material-ui/icons/Description";
 import FaceIcon from "@material-ui/icons/Face";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/material.css";
+import { useNavigate } from "react-router-dom";
 
 import PasswordInput from "../lib/PasswordInput";
 import EmailInput from "../lib/EmailInput";
@@ -166,6 +167,16 @@ const Signup = (props) => {
       message: "",
     },
   });
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/");
+      return;
+    }
+  }, [navigate]);
 
   const handleInput = (key, value) => {
     setSignupDetails({
