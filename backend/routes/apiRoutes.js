@@ -983,8 +983,8 @@ router.put("/applications/:id", jwtAuth, async (req, res) => {
           </head>
           <body>
           <div class="container">
-            <h1>Job "${jobDetails.title}" has been completed</h1>
-            <p>The job "${jobDetails.title}" at "${recruiterDetails.companyName}" has finished successfully. Thank you for your participation!</p>
+            <h1>Congratulations!</h1>
+            <p>You have successfully completed your "${jobDetails.title}" job at "${recruiterDetails.companyName}". Thank you for your participation!</p>
             <p>Please rate the job to help others and company</p>
             <a href="https://linkit-job-board.vercel.app/applications" class="btn">Rate Job</a>
             <p>Feel free to check other available opportunities.</p>
