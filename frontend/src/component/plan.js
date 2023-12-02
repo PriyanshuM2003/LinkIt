@@ -15,6 +15,7 @@ import isAuth, { userType } from "../lib/isAuth";
 import { makeStyles } from "@material-ui/core/styles";
 import apiList from "../lib/apiList";
 import { SetPopupContext } from "../App";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,6 +52,15 @@ const Plan = () => {
   const user = isAuth() ? userType() : null;
   const setPopup = useContext(SetPopupContext);
   const [userPlanData, setUserPlanData] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+      return;
+    }
+  }, [navigate]);
 
   const handlePlanSelect = (index) => {
     setSelectedPlan(index);

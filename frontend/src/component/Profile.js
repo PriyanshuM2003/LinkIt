@@ -16,6 +16,7 @@ import DescriptionIcon from "@material-ui/icons/Description";
 import FaceIcon from "@material-ui/icons/Face";
 import StarsIcon from "@material-ui/icons/Stars";
 import { SetPopupContext } from "../App";
+import { useNavigate } from "react-router-dom";
 
 import apiList, { server } from "../lib/apiList";
 
@@ -138,9 +139,16 @@ const Profile = (props) => {
     });
   };
 
+  const navigate = useNavigate();
+
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+      return;
+    }
     getData();
-  }, []);
+  }, [navigate]);
 
   const getData = () => {
     axios

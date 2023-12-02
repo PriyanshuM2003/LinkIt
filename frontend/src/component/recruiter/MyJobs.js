@@ -730,9 +730,16 @@ const MyJobs = (props) => {
   });
 
   const setPopup = useContext(SetPopupContext);
+  const navigate = useNavigate();
+
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+      return;
+    }
     getData();
-  }, []);
+  }, [navigate]);
 
   const getData = () => {
     let searchParams = [`myjobs=1`];

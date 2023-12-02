@@ -7,7 +7,7 @@ import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
   footer: {
-    marginTop: "auto",
+    marginTop: "1rem",
     backgroundColor: "#401d1d",
     color: theme.palette.primary.contrastText,
   },
@@ -21,7 +21,7 @@ function Footer() {
       <Container maxWidth="md">
         <Grid
           container
-          spacing={3}
+          spacing={4}
           justifyContent="space-between"
           alignItems="center"
         >

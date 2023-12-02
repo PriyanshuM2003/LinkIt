@@ -12,6 +12,7 @@ import axios from "axios";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/material.css";
 import StarsIcon from "@material-ui/icons/Stars";
+import { useNavigate } from "react-router-dom";
 
 import { SetPopupContext } from "../../App";
 
@@ -33,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 const Profile = (props) => {
   const classes = useStyles();
   const setPopup = useContext(SetPopupContext);
+  const navigate = useNavigate();
 
   const [profileDetails, setProfileDetails] = useState({
     companyName: "",
@@ -50,8 +52,13 @@ const Profile = (props) => {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+      return;
+    }
     getData();
-  }, []);
+  }, [navigate]);
 
   const getData = () => {
     axios

@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import ChipInput from "material-ui-chip-input";
+import { useNavigate } from "react-router-dom";
 
 import { SetPopupContext } from "../../App";
 
@@ -48,9 +49,16 @@ const CreateJobs = (props) => {
 
   const [profileDetails, setProfileDetails] = useState();
 
+  const navigate = useNavigate();
+
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+      return;
+    }
     getData();
-  }, []);
+  }, [navigate]);
 
   const getData = () => {
     axios

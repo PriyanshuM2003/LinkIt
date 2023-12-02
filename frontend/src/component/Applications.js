@@ -18,6 +18,7 @@ import {
 } from "@material-ui/core";
 import Rating from "@material-ui/lab/Rating";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import { SetPopupContext } from "../App";
 
@@ -55,7 +56,6 @@ const ApplicationTile = (props) => {
   const setPopup = useContext(SetPopupContext);
   const [open, setOpen] = useState(false);
   const [rating, setRating] = useState(application.job.rating);
-
   const appliedOn = new Date(application.dateOfApplication);
   const joinedOn = new Date(application.dateOfJoining);
 
@@ -223,10 +223,16 @@ const ApplicationTile = (props) => {
 const Applications = (props) => {
   const setPopup = useContext(SetPopupContext);
   const [applications, setApplications] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+      return;
+    }
     getData();
-  }, []);
+  }, [navigate]);
 
   const getData = () => {
     axios
