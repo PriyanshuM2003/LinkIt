@@ -720,7 +720,16 @@ const JobApplications = (props) => {
       })
       .then((response) => {
         console.log(response.data);
-        setApplications(response.data);
+        const sortedApplications = response.data.sort((a, b) => {
+          if (a.jobApplicant.premium && !b.jobApplicant.premium) {
+            return -1;
+          } else if (!a.jobApplicant.premium && b.jobApplicant.premium) {
+            return 1;
+          }
+          return 0;
+        });
+
+        setApplications(sortedApplications);
       })
       .catch((err) => {
         console.log(err.response);
