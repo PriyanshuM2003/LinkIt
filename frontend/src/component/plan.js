@@ -135,7 +135,7 @@ const Plan = () => {
     if (plan.title === "Monthly") {
       amount = parseInt(plan.price.slice(1));
     } else if (plan.title === "Quarterly") {
-      amount = parseInt(plan.price.slice(1)) * 4;
+      amount = parseInt(plan.price.slice(1)) * 3;
     } else if (plan.title === "Yearly") {
       amount = parseInt(plan.price.slice(1)) * 12;
     }
@@ -380,7 +380,7 @@ const Plan = () => {
       },
       {
         title: "Quarterly",
-        price: "₹88",
+        price: "₹92",
         features: [
           "Premiun Badge.",
           "Apply to 40 Jobs at Once.",
