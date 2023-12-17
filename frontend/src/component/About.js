@@ -30,7 +30,7 @@ const About = () => {
         <Grid item xs={12} md={6} align="center">
           <img alt="Linkit Logo" src={logoImg} width="170px" height="auto" />
           <Typography variant="h4" gutterBottom style={{ color: "#401d1d" }}>
-            Welcome to Linkit
+            Welcome to LinkIt
           </Typography>
           <Typography variant="body1" paragraph style={{ color: "#401d1d" }}>
             Linkit is dedicated to connecting talented individuals with their
